@@ -47,14 +47,20 @@ function new_excerpt_more( $more ) {
 add_filter('excerpt_more', 'new_excerpt_more');
 
 function call_wp_query($atts){
+  // Convert All Input to lower case
     $atts = array_change_key_case($atts, CASE_LOWER);
+  // Sanitize input going into the query to prevent XSS
+    $atts['tag'] = sanitize_title_for_query($atts['tag']);
+    //Set the supported attributes, and assign them to the attributes provided
     $a = shortcode_atts( array(
       'tag'=>''
     ), $atts);
+    //If the tag is not empty, use it to create a query with tag support
     if($a['tag']!=''){
     $args = array('post_type' => 'business', 'tag' => $a['tag']);
     query_businesses($args);
   }
+  //else give the default back.
   else{
     $args = array('post_type' => 'business');
     query_businesses($args);
@@ -86,7 +92,7 @@ function query_businesses($args){
    //Restore original Post Data
   wp_reset_postdata();
   } else {
-    echo '<h1> Query 2 failed </h1>';
+    echo '<h1> Query failed </h1>';
   // no posts found
   }
 }
