@@ -72,14 +72,20 @@ function b3_menu_html()
       <input type="submit" value="Submit" />
     </form>
     <?php
-    if(!empty($_FILES["CSV_to_parse"]['name'])){
+    if(!empty($_FILES['CSV_to_parse']['name'])){
       echo "Data Recieved..<br>";
+      if($_FILES['CSV_to_parse']['error'] > 0){
+        die('An error ocurred when uploading.');
+      }
       $csvfile = $_FILES['CSV_to_parse']['name'];
       $FileType = strtolower(pathinfo($csvfile,PATHINFO_EXTENSION));
       if($FileType!="csv"){
         echo "<br> Filetype not supported. Make sure you are uploading a .csv file <br>";
+      }else{
+        if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path( __FILE__ ).'/uploads/file.csv')) {
+          echo "File Upload Successful";
+        }
       }
     }
 }
-
 ?>
