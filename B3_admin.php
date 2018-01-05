@@ -55,7 +55,9 @@ function b3_menu_html()
     </form>
     <?php
     if (!empty($_POST[query])) {
+        // Reset postdata
         wp_reset_postdata();
+        // Create a new query, search by exact title
         $businesslist  = new WP_Query(array("post_type"=>"business","title"=>$_POST[query]));
         if ($businesslist->have_posts()) {
             while ($businesslist->have_posts()) {
@@ -72,20 +74,32 @@ function b3_menu_html()
       <input type="submit" value="Submit" />
     </form>
     <?php
-    if(!empty($_FILES['CSV_to_parse']['name'])){
-      echo "Data Recieved..<br>";
-      if($_FILES['CSV_to_parse']['error'] > 0){
-        die('An error ocurred when uploading.');
-      }
-      $csvfile = $_FILES['CSV_to_parse']['name'];
-      $FileType = strtolower(pathinfo($csvfile,PATHINFO_EXTENSION));
-      if($FileType!="csv"){
-        echo "<br> Filetype not supported. Make sure you are uploading a .csv file <br>";
-      }else{
-        if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path( __FILE__ ).'/uploads/file.csv')) {
-          echo "File Upload Successful";
+    // If the user uploaded a file via POST request
+    if (!empty($_FILES['CSV_to_parse']['name'])) {
+        // If there is an error uploading the file
+        if ($_FILES['CSV_to_parse']['error'] > 0) {
+            //stop everything, give an error
+            die('An error ocurred when uploading.');
         }
-      }
+        // If this point is reached data is recieved
+        echo "Data Recieved..<br>";
+        // Get the full name of the file
+        $csvfile = $_FILES['CSV_to_parse']['name'];
+        // take everything after the . and make it lower case (this is the file ext)
+        $FileType = strtolower(pathinfo($csvfile, PATHINFO_EXTENSION));
+        // Check that this is a csv
+        if ($FileType!="csv") {
+            // If this isn't a csv, die with an error
+            die("<br> Filetype not supported. Make sure you are uploading a .csv file <br>");
+        } else {
+            // The file is supported and we can now upload, use an if to make sure this went properly
+            if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path(__FILE__).'/uploads/file.csv')) {
+                echo "File Upload Successful";
+            } else {
+                // If there is an issue moving the file out of tmp die
+                die("File Upload Failed");
+            }
+        }
     }
 }
 ?>
