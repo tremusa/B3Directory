@@ -100,8 +100,11 @@ function b3_menu_html()
                 die("File Upload Failed <br>");
             }
             // Read whole file into a string
-            $filestring = file_get_contents (plugin_dir_path(__FILE__).'/uploads/file.csv');
-            echo(nl2br($filestring)); 
+            $filestring = file_get_contents(plugin_dir_path(__FILE__).'/uploads/file.csv');
+            //Parse String, using | delimeter
+            $filearray  = explode("|", $filestring);
+            //Create objects out of parsed data
+            print_r($filearray);
         }
     }
 }
