@@ -94,11 +94,14 @@ function b3_menu_html()
         } else {
             // The file is supported and we can now upload, use an if to make sure this went properly
             if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path(__FILE__).'/uploads/file.csv')) {
-                echo "File Upload Successful";
+                echo "File Upload Successful <br>";
             } else {
                 // If there is an issue moving the file out of tmp die
-                die("File Upload Failed");
+                die("File Upload Failed <br>");
             }
+            // Read whole file into a string
+            $filestring = file_get_contents (plugin_dir_path(__FILE__).'/uploads/file.csv');
+            echo(nl2br($filestring)); 
         }
     }
 }
