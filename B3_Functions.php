@@ -2,7 +2,7 @@
 require_once __DIR__ . '/B3_admin.php';
 /*
 Plugin Name:  B3 Directory
-Plugin URI:   # None At the Moment
+Plugin URI:   #
 Description:  The Blog Based Business Directory. This plugin allows for blog posts
               to be used as listings for businesses. More to come...
 Version:      .1
