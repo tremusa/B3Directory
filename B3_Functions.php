@@ -3,13 +3,13 @@ defined('ABSPATH') or die("No script kiddies please");
 require_once __DIR__ . '/B3_admin.php';
 /*
 Plugin Name:  B3 Directory
-Plugin URI:   #
+Plugin URI:   https://github.com/tstopak/B3directory/ 
 Description:  The Blog Based Business Directory. This plugin allows for blog posts
               to be used as listings for businesses. More to come...
 Version:      .1
 Author:       Thomas Stopak
 Author URI:   http://thomasstopak.com
-License:      GPLv2
+License:      GNU GPLv2
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:
 Domain Path:
