@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die("No script kiddies please");
 function read_upload()
 {
     // Read whole file into a string
@@ -7,7 +8,7 @@ function read_upload()
     $filearray  = explode("|", $filestring);
     //Create objects out of parsed data
     for ($row = 13; $row<count($filearray); $row=$row+13) {
-        // get business  name
+        // get business information from the file array
         $bname = $filearray[$row];
         echo "Business Name: $bname <br>";
         $bcity = $filearray[$row+1];

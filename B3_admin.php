@@ -9,6 +9,7 @@
 </style>
 
 <?php
+defined('ABSPATH') or die("No script kiddies please");
 require_once __DIR__ . '/B3_Parser.php';
 //HTML output for Admin Menu
 function b3_menu_html()
@@ -65,8 +66,23 @@ function b3_menu_html()
         if ($businesslist->have_posts()) {
             while ($businesslist->have_posts()) {
                 $businesslist->the_post();
-                echo "<h1>" . get_the_title() . "</h1><br>";
-            }
+                echo "<h1>" . get_the_title() . "</h1>";
+                echo "<h3> Categories: </h3>";
+                foreach (get_the_category() as $cat) {
+                    echo "$cat->category_nicename, ";
+                }
+            } ?>
+            <br>
+            <br>
+            <form action="" method="POST">
+              <strong> Remove Category: </strong> <input type="text" name="RemoveCat">
+              <input type="submit" value="Remove">
+            </form>
+            <form action="" method="POST">
+              <strong> Add Category: </strong> <input type="text" name="AddCat">
+              <input type="submit" value="Add">
+            </form>
+            <?php
         } else {
             echo "<h2> No Businesses Found </h2>";
         }
