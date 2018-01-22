@@ -6,6 +6,9 @@
   #footer-thankyou{
     display:none;
   }
+  #footer-upgrade{
+    display: none;
+  }
 </style>
 
 <?php
@@ -80,6 +83,12 @@ function b3_menu_html()
             <br>
 
             <form method="POST">
+              <strong> Add Category: </strong>
+              <input type="text" name="AddCat">
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+              <input type="submit" value="Add">
+            </form>
+            <form method="POST">
               <strong> Remove Category: </strong>
               <input type="text" name="RemoveCat">
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
@@ -87,24 +96,38 @@ function b3_menu_html()
             </form>
 
             <form method="POST">
-              <strong> Add Category: </strong>
-              <input type="text" name="AddCat">
+              <br>
+              <strong> Reassign Category: </strong><br>
+              <strong> Category to reassign: </strong>
+              <input type="text" name="ReassignCat"><br>
+              <strong> Category to assign to: </strong>
+              <input type="text" name="AssignCat"><br>
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+              <input type="submit" value="Reassign">
+            </form>
+            <br>
+            <br>
+            <form method="POST">
+              <strong> Add Tag: </strong>
+              <input type="text" name="AddTag">
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Add">
             </form>
-
             <form method="POST">
               <strong> Remove Tag: </strong>
               <input type="text" name="RemoveTag">
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Remove">
             </form>
-
             <form method="POST">
-              <strong> Add Tag: </strong>
-              <input type="text" name="AddTag">
+              <br>
+              <strong> Reassign Tag: </strong><br>
+              <strong> Tag to reassign: </strong>
+              <input type="text" name="ReassignTag"><br>
+              <strong> Tag to assign to: </strong>
+              <input type="text" name="AssignTag"><br>
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
-              <input type="submit" value="Add">
+              <input type="submit" value="Reassign">
             </form>
 
             <?php
