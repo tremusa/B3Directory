@@ -14,8 +14,7 @@ require_once __DIR__ . '/B3_Parser.php';
 //HTML output for Admin Menu
 function b3_menu_html()
 {
-
-  //Create a Query to pull up all posts with business post type
+    //Create a Query to pull up all posts with business post type
     $menu_query = new WP_Query(array('post_type'=>'business'));
     // Create a variable to refer to the post we just got with that query
     $businessposts = $menu_query->posts;
@@ -53,12 +52,13 @@ function b3_menu_html()
     }
     echo '</ul>'; ?>
     <h2> Search Your Businesses </h2><br>
-    <form action="" method="POST">
-    <input type="text" name="query" placeholder="Your Search Query">
+  <form method="post">
+   <input type="text" name="query" placeholder="Your Search Query">
     <input type="submit" value="Submit">
     </form>
     <?php
-    if (!empty($_POST[query])) {
+    if (!empty($_POST["query"])) {
+        $_POST["query"] = sanitize_text_field((htmlspecialchars(trim($_POST["query"]))));
         // Reset postdata
         wp_reset_postdata();
         // Create a new query, search by exact title
@@ -71,24 +71,49 @@ function b3_menu_html()
                 foreach (get_the_category() as $cat) {
                     echo "$cat->category_nicename, ";
                 }
+                echo "<h3> Tags: </h3>";
+                foreach (get_tags() as $tag) {
+                    echo "$tag->name ";
+                }
             } ?>
             <br>
             <br>
-            <form action="" method="POST">
-              <strong> Remove Category: </strong> <input type="text" name="RemoveCat">
+
+            <form method="POST">
+              <strong> Remove Category: </strong>
+              <input type="text" name="RemoveCat">
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Remove">
             </form>
-            <form action="" method="POST">
-              <strong> Add Category: </strong> <input type="text" name="AddCat">
+
+            <form method="POST">
+              <strong> Add Category: </strong>
+              <input type="text" name="AddCat">
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Add">
             </form>
+
+            <form method="POST">
+              <strong> Remove Tag: </strong>
+              <input type="text" name="RemoveTag">
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+              <input type="submit" value="Remove">
+            </form>
+
+            <form method="POST">
+              <strong> Add Tag: </strong>
+              <input type="text" name="AddTag">
+              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+              <input type="submit" value="Add">
+            </form>
+
             <?php
         } else {
             echo "<h2> No Businesses Found </h2>";
         }
     } ?>
     <h2> Import from CSV </h2>
-    <form action = "" method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data">
       <input type="file" name="CSV_to_parse" id="CSV" /><br><br>
       <input type="submit" value="Submit" />
     </form>

@@ -10,15 +10,20 @@ function read_upload()
     for ($row = 13; $row<count($filearray); $row=$row+13) {
         // get business information from the file array
         $bname = $filearray[$row];
+        $bname = wp_strip_all_tags(htmlspecialchars(trim($bname)));
         echo "Business Name: $bname <br>";
         $bcity = $filearray[$row+1];
+        $bcity = wp_strip_all_tags(htmlspecialchars(trim($bcity)));
         echo "Business City: $bcity <br>";
         $bstate = $filearray[$row+2];
+        $bstate = wp_strip_all_tags(htmlspecialchars(trim($bstate)));
         echo "Business State: $bstate <br>";
         $babout = $filearray[$row+3];
+        $babout = wp_strip_all_tags(htmlspecialchars(trim($babout)));
         echo "About Us: $babout <br>";
         $bcat1 = $filearray[$row+4];
         if ($bcat1!="") {
+          $bcat2 = wp_strip_all_tags(htmlspecialchars(trim($bcat2)));
             echo "Business Category 1: $bcat1 <br>";
             if (get_cat_ID($bcat1)==0) {
                 echo "Category 1 not found <br>";
@@ -29,6 +34,7 @@ function read_upload()
         }
         $bcat2 = $filearray[$row+5];
         if ($bcat2!="") {
+          $bcat2 = wp_strip_all_tags(htmlspecialchars(trim($bcat2)));
             echo "Business Category 2: $bcat2 <br>";
             if (get_cat_ID($bcat2)==0) {
                 echo "Category 2 not found <br>";
@@ -38,6 +44,7 @@ function read_upload()
             }
         }
         $bcat3 = $filearray[$row+6];
+        $bcat3 = wp_strip_all_tags(htmlspecialchars(trim($bcat3)));
         if ($bcat3!="") {
             echo "Business Category 3: $bcat3 <br>";
             if (get_cat_ID($bcat3)==0) {
@@ -49,6 +56,7 @@ function read_upload()
         }
         $bcat4 = $filearray[$row+7];
         if ($bcat4!="") {
+           $bcat4 = wp_strip_all_tags(htmlspecialchars(trim($bcat4)));
             echo "Business Category 4: $bcat4 <br>";
             if (get_cat_ID($bcat4)==0) {
                 echo "Category 4 not found <br>";
@@ -59,6 +67,7 @@ function read_upload()
         }
         $bcat5 = $filearray[$row+8];
         if ($bcat5!="") {
+          $bcat5 = wp_strip_all_tags(htmlspecialchars(trim($bcat5)));
             echo "Business Category 5: $bcat5 <br>";
             if (get_cat_ID($bcat5)==0) {
                 echo "Category 5 not found <br>";
@@ -69,6 +78,7 @@ function read_upload()
         }
         $bcat6 = $filearray[$row+9];
         if ($bcat6!="") {
+          $bcat6 = wp_strip_all_tags(htmlspecialchars(trim($bcat6)));
             echo "Business Category 6: $bcat6 <br>";
             if (get_cat_ID($bcat6)==0) {
                 echo "Category 6 not found <br>";
@@ -78,10 +88,13 @@ function read_upload()
             }
         }
         $busaproducts = $filearray[$row+10];
+        $busaproducts = wp_strip_all_tags(htmlspecialchars(trim($busaproducts)));
         echo "Products made in USA: $busaproducts <br>";
         $burl = $filearray[$row+11];
+        $burl= wp_strip_all_tags(htmlspecialchars(trim($burl)));
         echo "URL: <a href='http://$burl'> $burl </a> <br>";
         $bnotes = $filearray[$row+12];
+        $bnotes = wp_strip_all_tags(htmlspecialchars(trim($bnotes)));
         echo "Notes: $bnotes <br>";
         echo "<br>";
         echo "<br>";
@@ -93,7 +106,7 @@ function read_upload()
         }
 
         $new_business_post=array(
-          'post_title'    => wp_strip_all_tags($bname),
+          'post_title'    => wp_strip_all_tags(htmlspecialchars(trim($bname))),
           'post_content'  => $babout,
           'post_status'   => 'publish',
           'post_author'   => 1,
