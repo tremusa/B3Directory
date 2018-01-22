@@ -14,6 +14,7 @@
 <?php
 defined('ABSPATH') or die("No script kiddies please");
 require_once __DIR__ . '/B3_Parser.php';
+require_once __DIR__ . '/B3_Refactor.php';
 //HTML output for Admin Menu
 function b3_menu_html()
 {
@@ -59,20 +60,31 @@ function b3_menu_html()
    <input type="text" name="query" placeholder="Your Search Query">
     <input type="submit" value="Submit">
     </form>
+
     <?php
     if (!empty($_POST["query"])) {
+
         $_POST["query"] = sanitize_text_field((htmlspecialchars(trim($_POST["query"]))));
         // Reset postdata
         wp_reset_postdata();
         // Create a new query, search by exact title
-        $businesslist  = new WP_Query(array("post_type"=>"business","title"=>$_POST[query]));
+        $businesslist  = new WP_Query(array("post_type"=>"business","title"=>$_POST["query"]));
         if ($businesslist->have_posts()) {
             while ($businesslist->have_posts()) {
                 $businesslist->the_post();
+                if(isset($_POST["AddCat"])){
+                AddCategory($_POST["AddCat"],get_the_ID());
+                }
                 echo "<h1>" . get_the_title() . "</h1>";
-                echo "<h3> Categories: </h3>";
-                foreach (get_the_category() as $cat) {
-                    echo "$cat->category_nicename, ";
+                $catlist = array();
+                if(!is_wp_error(wp_get_object_terms(get_the_ID(),"category"))){
+                  $catlist = wp_get_object_terms(get_the_ID(),"category");
+                }
+                if($catlist != array()){
+                  echo "<h3> Categories: </h3>";
+                  foreach($catlist as $thisterm){
+                     echo " " . $thisterm->name . ", <br>";
+                  }
                 }
                 echo "<h3> Tags: </h3>";
                 foreach (get_tags() as $tag) {
@@ -88,6 +100,7 @@ function b3_menu_html()
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Add">
             </form>
+            
             <form method="POST">
               <strong> Remove Category: </strong>
               <input type="text" name="RemoveCat">
