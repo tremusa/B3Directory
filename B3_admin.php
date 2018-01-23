@@ -32,16 +32,18 @@ function b3_menu_html()
     } ?>
     <div class="b3menuwrapper">
     <h1> B3 Directory settings </h1>
-    <h2> Your Business Tags </h2>
+
     <?php
-      echo '<ul>';
-    foreach ($businesstagterms as $term) {
-        echo '<li>' . get_term($term)->name . '</li>';
+    if ($businesstagterms!=array()) {
+        echo "<h2> Your Business Tags </h2>";
+        echo '<ul>';
+        foreach ($businesstagterms as $term) {
+            echo '<li>' . get_term($term)->name . '</li>';
+        }
+        echo '</ul>';
     }
-    echo '</ul>'; ?>
-    <h2> Your Business Categories </h2>
-    <?php
-      wp_reset_postdata();
+
+    wp_reset_postdata();
     //Create a Query to pull up all posts with business post type
     $cat_query = new WP_Query(array('post_type'=>'business'));
     // Create a variable to refer to the post we just got with that query
@@ -50,45 +52,88 @@ function b3_menu_html()
     $catpostids = wp_list_pluck($catposts, 'ID');
     // Save all tags to a variable
     $businesscatterms = wp_get_object_terms($catpostids, 'category');
-    echo '<ul>';
-    foreach ($businesscatterms as $t2) {
-        echo '<li>' . get_term($t2)->name . '</li>';
-    }
-    echo '</ul>'; ?>
-    <h2> Search Your Businesses </h2><br>
-  <form method="post">
-   <input type="text" name="query" placeholder="Your Search Query">
-    <input type="submit" value="Submit">
+    if ($businesscatterms!=array()) {
+        echo "<h2> Your Business Categories </h2>";
+        echo '<ul>';
+        foreach ($businesscatterms as $t2) {
+            echo '<li>' . get_term($t2)->name . '</li>';
+        }
+        echo '</ul>';
+    } ?>
+<?php  if ($businesstagterms!=array()):?>
+    <form method="POST">
+      <br>
+      <strong> Reassign Tag: </strong><br>
+      <strong> Tag to reassign: </strong>
+      <input type="text" name="ReassignTag"><br>
+      <strong> Tag to assign to: </strong>
+      <input type="text" name="AssignTag"><br>
+      <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+      <input type="submit" value="Reassign">
     </form>
+    <br>
+    <br>
+<?php endif; ?>
+
+ <?php  if ($businesscatterms!=array()):?>
+  <form method="POST">
+    <strong> Reassign Category: </strong><br>
+    <strong> Category to reassign: </strong>
+    <input type="text" name="ReassignCat"><br>
+    <strong> Category to assign to: </strong>
+    <input type="text" name="AssignCat"><br>
+    <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
+    <input type="submit" value="Reassign">
+  </form>
+  <br>
+  <br>
+<?php endif; ?>
+
+  <h2> Search Your Businesses </h2><br>
+  <form method="post">
+  <input type="text" name="query" placeholder="Your Search Query">
+  <input type="submit" value="Submit">
+  </form>
 
     <?php
     if (!empty($_POST["query"])) {
-
         $_POST["query"] = sanitize_text_field((htmlspecialchars(trim($_POST["query"]))));
         // Reset postdata
         wp_reset_postdata();
         // Create a new query, search by exact title
         $businesslist  = new WP_Query(array("post_type"=>"business","title"=>$_POST["query"]));
+        $success_flag = false;
         if ($businesslist->have_posts()) {
             while ($businesslist->have_posts()) {
                 $businesslist->the_post();
-                if(isset($_POST["AddCat"])){
-                AddCategory($_POST["AddCat"],get_the_ID());
+                if (isset($_POST["AddCat"])) {
+                    $success_flag = AddCategory($_POST["AddCat"], get_the_ID());
+                }
+                if (isset($_POST["RemoveCat"])) {
+                    $success_flag = RemoveCategory($_POST["RemoveCat"], get_the_ID());
+                }
+                if (isset($_POST["AddTag"])) {
+                    $success_flag = AddTag($_POST["AddTag"], get_the_ID());
+                }
+                if (isset($_POST["RemoveTag"])) {
+                    $success_flag = RemoveTag($_POST["RemoveTag"], get_the_ID());
                 }
                 echo "<h1>" . get_the_title() . "</h1>";
                 $catlist = array();
-                if(!is_wp_error(wp_get_object_terms(get_the_ID(),"category"))){
-                  $catlist = wp_get_object_terms(get_the_ID(),"category");
+                if (!is_wp_error(wp_get_object_terms(get_the_ID(), "category"))) {
+                    $catlist = wp_get_object_terms(get_the_ID(), "category");
                 }
-                if($catlist != array()){
-                  echo "<h3> Categories: </h3>";
-                  foreach($catlist as $thisterm){
-                     echo " " . $thisterm->name . ", <br>";
-                  }
+                if ($catlist != array()) {
+                    echo "<h3> Categories: </h3>";
+                    foreach ($catlist as $thisterm) {
+                        echo " " . $thisterm->name . ", <br>";
+                    }
                 }
-                echo "<h3> Tags: </h3>";
-                foreach (get_tags() as $tag) {
-                    echo "$tag->name ";
+                if (get_tags()!=array()) {
+                    echo "<h3> Tags: </h3>";
+                    foreach (get_tags() as $tag) {
+                        echo "$tag->name ";
+                    }
                 }
             } ?>
             <br>
@@ -100,7 +145,14 @@ function b3_menu_html()
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Add">
             </form>
-            
+
+
+            <?php
+            if ($success_flag && isset($_POST["AddCat"])) {
+                echo "Category Added Successfully";
+            } ?>
+
+
             <form method="POST">
               <strong> Remove Category: </strong>
               <input type="text" name="RemoveCat">
@@ -108,41 +160,30 @@ function b3_menu_html()
               <input type="submit" value="Remove">
             </form>
 
-            <form method="POST">
-              <br>
-              <strong> Reassign Category: </strong><br>
-              <strong> Category to reassign: </strong>
-              <input type="text" name="ReassignCat"><br>
-              <strong> Category to assign to: </strong>
-              <input type="text" name="AssignCat"><br>
-              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
-              <input type="submit" value="Reassign">
-            </form>
+
+            <?php
+            if ($success_flag && isset($_POST["RemoveCat"])) {
+                echo "Category Removed Successfully";
+            } ?>
             <br>
             <br>
+
             <form method="POST">
               <strong> Add Tag: </strong>
               <input type="text" name="AddTag">
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Add">
             </form>
+            <?php
+            if ($success_flag && isset($_POST["AddTag"])) {
+                echo "Tag Added Successfully";
+            } ?>
             <form method="POST">
               <strong> Remove Tag: </strong>
               <input type="text" name="RemoveTag">
               <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
               <input type="submit" value="Remove">
             </form>
-            <form method="POST">
-              <br>
-              <strong> Reassign Tag: </strong><br>
-              <strong> Tag to reassign: </strong>
-              <input type="text" name="ReassignTag"><br>
-              <strong> Tag to assign to: </strong>
-              <input type="text" name="AssignTag"><br>
-              <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
-              <input type="submit" value="Reassign">
-            </form>
-
             <?php
         } else {
             echo "<h2> No Businesses Found </h2>";
