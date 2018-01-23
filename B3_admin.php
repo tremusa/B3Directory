@@ -110,6 +110,7 @@ function b3_menu_html()
                     $success_flag = AddCategory($_POST["AddCat"], get_the_ID());
                 }
                 if (isset($_POST["RemoveCat"])) {
+                    echo "here1"; 
                     $success_flag = RemoveCategory($_POST["RemoveCat"], get_the_ID());
                 }
                 if (isset($_POST["AddTag"])) {
@@ -132,7 +133,7 @@ function b3_menu_html()
                 if (get_tags()!=array()) {
                     echo "<h3> Tags: </h3>";
                     foreach (get_tags() as $tag) {
-                        echo "$tag->name ";
+                        echo "$tag->name ,<br>";
                     }
                 }
             } ?>
@@ -185,7 +186,11 @@ function b3_menu_html()
               <input type="submit" value="Remove">
             </form>
             <?php
-        } else {
+            if ($success_flag && isset($_POST["RemoveTag"])) {
+                echo "Tag Removed Successfully";
+            }
+        }
+        else {
             echo "<h2> No Businesses Found </h2>";
         }
     } ?>

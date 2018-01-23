@@ -38,13 +38,20 @@
 
   function AddTag($tagname, $postid)
   {
-      if(wp_set_post_tags($postid, $tagname, true)!=array()){
+      if(wp_set_post_tags($postid, $tagname, true)!=NULL){
       return true;
-    } return false; 
+      }
+      return false;
   }
 
-  function RemoveTag()
-  {
+  function RemoveTag($tagname, $postid)
+  { $thistag = get_term_by('name', $tagname, 'post_tag');
+    echo "here2";
+    if(wp_remove_object_terms($postid, (int)$thistag->term_id, 'post_tag')){
+      return true;
+    }
+
+    return false;
   }
 
   function ReassignTag()
