@@ -18,6 +18,11 @@ require_once __DIR__ . '/B3_Refactor.php';
 //HTML output for Admin Menu
 function b3_menu_html()
 {
+    if(isset($_POST["ReassignTag"]) && isset($_POST["AssignTag"])){
+    $success_flag = ReassignTag($_POST["ReassignTag"],$_POST["AssignTag"]);
+    }
+    //Flag for last performed operation
+    $success_flag = false;
     //Create a Query to pull up all posts with business post type
     $menu_query = new WP_Query(array('post_type'=>'business'));
     // Create a variable to refer to the post we just got with that query
@@ -44,6 +49,9 @@ function b3_menu_html()
     }
 
     wp_reset_postdata();
+    if(isset($_POST["ReassignCat"]) && isset($_POST["AssignCat"])){
+      $success_flag = ReassignCategory($_POST["ReassignCat"],$_POST["AssignCat"]);
+    }
     //Create a Query to pull up all posts with business post type
     $cat_query = new WP_Query(array('post_type'=>'business'));
     // Create a variable to refer to the post we just got with that query
@@ -63,7 +71,7 @@ function b3_menu_html()
 <?php  if ($businesstagterms!=array()):?>
     <form method="POST">
       <br>
-      <strong> Reassign Tag: </strong><br>
+      <h2> Reassign Tag: </h2>
       <strong> Tag to reassign: </strong>
       <input type="text" name="ReassignTag"><br>
       <strong> Tag to assign to: </strong>
@@ -77,7 +85,7 @@ function b3_menu_html()
 
  <?php  if ($businesscatterms!=array()):?>
   <form method="POST">
-    <strong> Reassign Category: </strong><br>
+    <h2> Reassign Category: </h2>
     <strong> Category to reassign: </strong>
     <input type="text" name="ReassignCat"><br>
     <strong> Category to assign to: </strong>
@@ -85,11 +93,15 @@ function b3_menu_html()
     <input type="hidden" name="query" value="<?php echo(stripslashes($_POST["query"])); ?>">
     <input type="submit" value="Reassign">
   </form>
+  <?php if($success_flag){
+    echo "<br>Reassign Successful<br>";
+  }
+  ?>
   <br>
   <br>
 <?php endif; ?>
 
-  <h2> Search Your Businesses </h2><br>
+  <h2> Search Your Businesses </h2>
   <form method="post">
   <input type="text" name="query" placeholder="Your Search Query">
   <input type="submit" value="Submit">
@@ -102,7 +114,6 @@ function b3_menu_html()
         wp_reset_postdata();
         // Create a new query, search by exact title
         $businesslist  = new WP_Query(array("post_type"=>"business","title"=>$_POST["query"]));
-        $success_flag = false;
         if ($businesslist->have_posts()) {
             while ($businesslist->have_posts()) {
                 $businesslist->the_post();
@@ -110,7 +121,7 @@ function b3_menu_html()
                     $success_flag = AddCategory($_POST["AddCat"], get_the_ID());
                 }
                 if (isset($_POST["RemoveCat"])) {
-                    echo "here1"; 
+                    echo "here1";
                     $success_flag = RemoveCategory($_POST["RemoveCat"], get_the_ID());
                 }
                 if (isset($_POST["AddTag"])) {
