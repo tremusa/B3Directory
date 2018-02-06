@@ -72,7 +72,8 @@ function call_wp_query($atts)
       'search' => ''
 
     ), $atts);
-    $args=array('post_type'=> 'business', 'post_per_page'=>-1);
+    $args=array('post_type'=> 'business', 'posts_per_page'=>-1);
+
     //If the tag is not empty, use it to create a query with tag support
     if ($a['tag']!='') {
         $args['tag'] = $a['tag'];
@@ -88,6 +89,25 @@ function call_wp_query($atts)
     }
     if($a['search']='true'){
       search_menu();
+    }
+    if(isset($_GET['per_page']) && $_GET['per_page'] != 'all'){
+      $args['posts_per_page'] = (int) htmlspecialchars($_GET['per_page'], ENT_QUOTES);
+      $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+      $args['paged']=$paged;
+    }
+    if(isset($_GET['sort'])){
+      if($_GET['sort'] == 'asc'){
+        $args['order'] = 'ASC';
+        $args['orderby'] = 'title';
+      }
+      if($_GET['sort'] == 'desc'){
+        $args['order'] = 'DESC';
+        $args['orderby'] = 'title';
+      }
+    }
+    if(isset($_GET['search'])){
+      $search_term = htmlspecialchars($_GET['search'], ENT_QUOTES);
+      $args['s'] = $search_term;
     }
     //use constructed args array to query businesses
     query_businesses($args);
@@ -117,7 +137,7 @@ function query_businesses($args)
         //Restore original Post Data
         wp_reset_postdata();
     } else {
-        echo '<h1> Query failed </h1>';
+        echo '<h1> No Posts Found </h1>';
         // no posts found
     }
 }
@@ -142,7 +162,7 @@ function search_menu()
     <input type ="hidden" name="sort" value='<?php echo htmlspecialchars($_GET['sort'],  ENT_QUOTES);?>'>
   <?php endif; ?>
     <select name="per_page">
-      <option value="" <?php if($_GET['per_page']=='') echo "selected='selected'";?>> </option> 
+      <option value="" <?php if($_GET['per_page']=='') echo "selected='selected'";?>> </option>
       <option value="5" <?php if($_GET['per_page'] == 5) echo "selected='selected'";?>> 5 </option>
       <option value="10" <?php if($_GET['per_page'] == 10) echo "selected='selected'";?>> 10 </option>
       <option value="15" <?php if($_GET['per_page'] == 15) echo "selected='selected'";?>> 15 </option>
