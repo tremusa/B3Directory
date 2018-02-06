@@ -161,23 +161,28 @@ function search_menu()
     <?php if (isset($_GET['sort'])): ?>
     <input type ="hidden" name="sort" value='<?php echo htmlspecialchars($_GET['sort'],  ENT_QUOTES);?>'>
   <?php endif; ?>
+    Posts Per Page:
     <select name="per_page">
+      <?php if(!isset($_GET['per_page'])|| $_GET['per_page']==''): ?>
       <option value="" <?php if($_GET['per_page']=='') echo "selected='selected'";?>> </option>
+      <?php endif; ?>
       <option value="5" <?php if($_GET['per_page'] == 5) echo "selected='selected'";?>> 5 </option>
       <option value="10" <?php if($_GET['per_page'] == 10) echo "selected='selected'";?>> 10 </option>
       <option value="15" <?php if($_GET['per_page'] == 15) echo "selected='selected'";?>> 15 </option>
       <option value="20" <?php if($_GET['per_page'] == 20) echo "selected='selected'";?>> 20 </option>
-      <option value="all"> All </option>
+      <option value="all"  <?php if($_GET['per_page'] == 'all') echo "selected='selected'";?>> All </option>
     </select>
   </form>
+  <p> Sort:
   <a href='<?php $this_request->add_param("sort", "asc");
     echo $request_origin . $this_request->construct_params(); ?>'>
-    ASC
+     A-Z
   </a>
   <a href='<?php $this_request->add_param("sort", "desc");
     echo $request_origin . $this_request->construct_params(); ?>'>
-    DESC
+     Z-A
   </a>
+</p>
   <?php
 }
 ?>
