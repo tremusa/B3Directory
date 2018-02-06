@@ -109,7 +109,7 @@ function b3_menu_html()
 
     <?php
     if (!empty($_POST["query"])) {
-        $_POST["query"] = sanitize_text_field((htmlspecialchars(trim($_POST["query"]))));
+        $_POST["query"] = sanitize_text_field((htmlspecialchars(trim($_POST["query"]),ENT_QUOTES)));
         // Reset postdata
         wp_reset_postdata();
         // Create a new query, search by exact title
@@ -223,7 +223,7 @@ function b3_menu_html()
         // Get the full name of the fileecho "<br>";
         $csvfile = $_FILES['CSV_to_parse']['name'];
         // take everything after the . and make it lower case (this is the file ext)
-        $FileType = strtolower(pathinfo($csvfile, PATHINFO_EXTENSION));
+        $FileType = str_replace(chr(0), '', strtolower(pathinfo($csvfile, PATHINFO_EXTENSION)));
         // Check that this is a csv
         if ($FileType!="csv") {
             // If this isn't a csv, die with an error
