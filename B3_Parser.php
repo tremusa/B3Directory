@@ -1,5 +1,6 @@
 <?php
 defined('ABSPATH') or die("No script kiddies please");
+require_once  __DIR__ . '/B3_Business_Post.php';
 function read_upload()
 {
     // Read whole file into a string
@@ -87,8 +88,8 @@ function read_upload()
                 }
             }
         }
-        $busaproducts = $filearray[$row+10];
-        $busaproducts = wp_strip_all_tags(htmlspecialchars(trim($busaproducts),ENT_QUOTES));
+        $btag1 = $filearray[$row+10];
+        $btag1 = wp_strip_all_tags(htmlspecialchars(trim($btag1),ENT_QUOTES));
         echo "Products made in USA: $busaproducts <br>";
         $burl = $filearray[$row+11];
         $burl= wp_strip_all_tags(htmlspecialchars(trim($burl)));
@@ -113,6 +114,7 @@ function read_upload()
           'post_category' => $categoryid,
           'tags_input' => $busaproducts
           );
-          echo wp_insert_post($new_business_post);
+          wp_insert_post($new_business_post);
     }
 }
+?>

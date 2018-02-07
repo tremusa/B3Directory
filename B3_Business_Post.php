@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') or die("No script kiddies please");
-require_once __DIR__ . '/B3_Refactor.php'; 
+require_once __DIR__ . '/B3_Refactor.php';
   class Business_Post{
     private static $post_type = 'business';
     private static $post_status = 'publish';

@@ -59,6 +59,7 @@
 
   function AddTag($tagname, $postid)
   {
+      echo "here" . $postid; 
       if(wp_set_post_tags($postid, $tagname, true)!=NULL){
       return true;
       }

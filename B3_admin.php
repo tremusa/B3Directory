@@ -14,11 +14,9 @@
 <?php
 defined('ABSPATH') or die("No script kiddies please");
 require_once __DIR__ . '/B3_Parser.php';
-require_once __DIR__ . '/B3_Refactor.php';
 //HTML output for Admin Menu
 function b3_menu_html()
-{
-    if(isset($_POST["ReassignTag"]) && isset($_POST["AssignTag"])){
+{    if(isset($_POST["ReassignTag"]) && isset($_POST["AssignTag"])){
     $success_flag = ReassignTag($_POST["ReassignTag"],$_POST["AssignTag"]);
     }
     //Flag for last performed operation
@@ -121,7 +119,6 @@ function b3_menu_html()
                     $success_flag = AddCategory($_POST["AddCat"], get_the_ID());
                 }
                 if (isset($_POST["RemoveCat"])) {
-                    echo "here1";
                     $success_flag = RemoveCategory($_POST["RemoveCat"], get_the_ID());
                 }
                 if (isset($_POST["AddTag"])) {
@@ -141,9 +138,9 @@ function b3_menu_html()
                         echo " " . $thisterm->name . ", <br>";
                     }
                 }
-                if (get_tags()!=array()) {
+                if (get_the_tags()!=array()) {
                     echo "<h3> Tags: </h3>";
-                    foreach (get_tags() as $tag) {
+                    foreach (get_the_tags() as $tag) {
                         echo "$tag->name ,<br>";
                     }
                 }
@@ -204,7 +201,8 @@ function b3_menu_html()
         else {
             echo "<h2> No Businesses Found </h2>";
         }
-    } ?>
+    }
+    ?>
     <h2> Import from CSV </h2>
     <form method="POST" enctype="multipart/form-data">
       <input type="file" name="CSV_to_parse" id="CSV" /><br><br>
