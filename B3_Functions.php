@@ -72,7 +72,7 @@ function call_wp_query($atts)
       'search' => ''
 
     ), $atts);
-    $args=array('post_type'=> 'business', 'posts_per_page'=>-1);
+    $args=array('post_type'=> 'business', 'posts_per_page'=>-1, 'order'=>'ASC', 'orderby'=>'title');
 
     //If the tag is not empty, use it to create a query with tag support
     if ($a['tag']!='') {
@@ -98,11 +98,9 @@ function call_wp_query($atts)
     if(isset($_GET['sort'])){
       if($_GET['sort'] == 'asc'){
         $args['order'] = 'ASC';
-        $args['orderby'] = 'title';
       }
       if($_GET['sort'] == 'desc'){
         $args['order'] = 'DESC';
-        $args['orderby'] = 'title';
       }
     }
     if(isset($_GET['search'])){
