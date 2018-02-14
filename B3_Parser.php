@@ -8,7 +8,7 @@ function read_upload()
     //Parse String, using | delimeter
     $filearray  = explode("|", $filestring);
     //Create objects out of parsed data
-    for ($row = 13; $row<count($filearray); $row=$row+13) {
+    for ($row = 12; $row<count($filearray); $row=$row+12) {
         // get business information from the file array
         $bname = $filearray[$row];
         $bname = wp_strip_all_tags(htmlspecialchars(trim($bname),ENT_QUOTES));
@@ -90,13 +90,10 @@ function read_upload()
         }
         $btag1 = $filearray[$row+10];
         $btag1 = wp_strip_all_tags(htmlspecialchars(trim($btag1),ENT_QUOTES));
-        echo "Products made in USA: $busaproducts <br>";
+        echo "Products made in USA: $btag1 <br>";
         $burl = $filearray[$row+11];
         $burl= wp_strip_all_tags(htmlspecialchars(trim($burl)));
         echo "URL: <a href='http://$burl'> $burl </a> <br>";
-        $bnotes = $filearray[$row+12];
-        $bnotes = wp_strip_all_tags(htmlspecialchars(trim($bnotes),ENT_QUOTES));
-        echo "Notes: $bnotes <br>";
         echo "<br>";
         echo "<br>";
         $categoryid = array();
@@ -112,7 +109,7 @@ function read_upload()
           'post_status'   => 'publish',
           'post_type'     => 'business',
           'post_category' => $categoryid,
-          'tags_input' => $busaproducts
+          'tags_input' => $btag1
           );
           wp_insert_post($new_business_post);
     }

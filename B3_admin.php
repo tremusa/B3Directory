@@ -228,7 +228,7 @@ function b3_menu_html()
             die("<br> Filetype not supported. Make sure you are uploading a .csv file <br>");
         } else {
             // The file is supported and we can now upload, use an if to make sure this went properly
-            if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path(__FILE__).'/uploads/file.csv')) {
+            if (move_uploaded_file(($_FILES['CSV_to_parse']['tmp_name']), plugin_dir_path(__FILE__).'uploads/file.csv')) {
                 echo "File Upload Successful <br>";
             } else {
                 // If there is an issue moving the file out of tmp die
